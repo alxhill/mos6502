@@ -31,6 +31,8 @@ use crate::Variant;
 
 use crate::registers::{Registers, StackPointer, Status, StatusArgs};
 
+use std::println;
+
 fn address_from_bytes(lo: u8, hi: u8) -> u16 {
     u16::from(lo) + (u16::from(hi) << 8usize)
 }
@@ -71,7 +73,7 @@ impl<M: Bus, V: Variant> CPU<M, V> {
     /// (i.e. the opcode is invalid or has not been implemented).
     pub fn fetch_next_and_decode(&mut self) -> Option<DecodedInstr> {
         // Helper function to read a 16-bit address from memory
-        fn read_address<M: Bus>(mem: &mut M, addr: u16) -> [u8; 2] {
+        fn read_address<M: Bus>(mem: &M, addr: u16) -> [u8; 2] {
             let lo = mem.get_byte(addr);
             let hi = mem.get_byte(addr.wrapping_add(1));
             [lo, hi]
@@ -102,7 +104,7 @@ impl<M: Bus, V: Variant> CPU<M, V> {
                 let x = self.registers.index_x;
                 let y = self.registers.index_y;
 
-                let memory = &mut self.memory;
+                let memory = &self.memory;
 
                 let am_out = match am {
                     AddressingMode::Accumulator | AddressingMode::Implied => {
@@ -735,10 +737,12 @@ impl<M: Bus, V: Variant> CPU<M, V> {
         };
     }
 
-    pub fn single_step(&mut self) {
+    pub fn single_step(&mut self) -> bool {
         if let Some(decoded_instr) = self.fetch_next_and_decode() {
             self.execute_instruction(decoded_instr);
+            return true;
         }
+        false
     }
 
     pub fn run(&mut self) {

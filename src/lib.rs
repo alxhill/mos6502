@@ -45,7 +45,7 @@
 #![allow(clippy::similar_names)]
 #![allow(clippy::match_same_arms)]
 #![allow(clippy::too_many_lines)]
-#![no_std]
+// #![no_std]
 
 #[doc = include_str!("../README.md")]
 pub mod cpu;
