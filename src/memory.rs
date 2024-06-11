@@ -49,7 +49,7 @@ const MEMORY_SIZE: usize = (ADDR_HI_BARE - ADDR_LO_BARE) as usize + 1usize;
 // FIXME: Should this use indirection for `bytes`?
 #[derive(Copy, Clone, Debug)]
 pub struct Memory {
-    bytes: [u8; MEMORY_SIZE],
+    pub bytes: [u8; MEMORY_SIZE],
 }
 
 impl Default for Memory {

@@ -20,6 +20,8 @@ fn main() {
 
     let mut cpu = cpu::CPU::new(Memory::new(), Nmos6502);
 
+    println!("bytes: {}", cpu.memory.bytes.len());
+
     cpu.memory.set_bytes(0x00, &zero_page_data);
     cpu.memory.set_bytes(0x1000, &program);
     cpu.registers.program_counter = 0x1000;
@@ -65,5 +67,5 @@ fn main() {
         i += 1;
     }
 
-    println!("Fib(n) is {}", cpu.memory.get_byte(0));
+    println!("Fib({}) is {}", cpu.memory.get_byte(0), cpu.memory.get_byte(1));
 }
